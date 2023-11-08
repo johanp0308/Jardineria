@@ -8,13 +8,11 @@ SELECT c.nombre_cliente as Cliente, CONCAT(e.nombre,' ',e.apellido1,' ',e.apelli
 FROM cliente c 
 JOIN empleado e ON c.codigo_empleado_rep_ventas = e.codigo_empleado
 JOIN pago p on p.codigo_cliente = c.codigo_cliente;
-
 -- 3
 SELECT c.nombre_cliente as Cliente, c.codigo_cliente as Codigo
 FROM cliente c
 LEFT JOIN pago p on c.codigo_cliente = p.codigo_cliente
-WHERE p.codigo_cliente IS NULL
-;
+WHERE p.codigo_cliente IS NULL;
 
 SELECT c.nombre_cliente as Cliente, c.codigo_cliente as Codigo
 FROM pago p
@@ -69,6 +67,10 @@ JOIN pedido p ON c.codigo_cliente = p.codigo_cliente
 WHERE p.fecha_esperada = p.fecha_entrega
 GROUP BY c.nombre_cliente;
 
-SELECT c.nombre_cliente as Cliente, GROUP_CONCAT(c.nombre_cliente) as Gamas
+-- 11.
+SELECT c.nombre_cliente as Cliente, GROUP_CONCAT(DISTINCT g.gama) as Gama
 FROM cliente c
-JOIN pedido p ON c.codigo_cliente
+JOIN pedido p ON c.codigo_cliente = p.codigo_cliente
+JOIN detalle_pedido d ON d.codigo_pedido = p.codigo_pedido
+JOIN producto pr ON d.codigo_producto = pr.codigo_producto
+JOIN gama_producto g ON pr.gama = g.gama;
