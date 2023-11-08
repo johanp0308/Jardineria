@@ -1,3 +1,4 @@
+-- 1.4.5
 -- 1.
 SELECT c.nombre_cliente as Cliente, CONCAT(e.nombre,' ',e.apellido1,' ',e.apellido2) as Representante 
 FROM cliente c 
@@ -64,7 +65,7 @@ JOIN empleado s ON j.codigo_jefe = s.codigo_empleado;
 SELECT c.nombre_cliente as Cliente, GROUP_CONCAT(p.codigo_pedido) as Pedidos_Id
 FROM cliente c
 JOIN pedido p ON c.codigo_cliente = p.codigo_cliente
-WHERE p.fecha_esperada = p.fecha_entrega
+WHERE p.fecha_esperada < p.fecha_entrega
 GROUP BY c.nombre_cliente;
 
 -- 11.
@@ -74,3 +75,14 @@ JOIN pedido p ON c.codigo_cliente = p.codigo_cliente
 JOIN detalle_pedido d ON d.codigo_pedido = p.codigo_pedido
 JOIN producto pr ON d.codigo_producto = pr.codigo_producto
 JOIN gama_producto g ON pr.gama = g.gama;
+
+
+-- 1.4.6
+
+-- 1. Devuelve un listado que muestre solamente los clientes que no han realizado ningún pago.
+SELECT c.nombre_cliente
+FROM cliente c
+LEFT JOIN pago p ON c.codigo_cliente = p.codigo_cliente
+WHERE c.codigo_cliente IS NULL;
+
+-- 2. 
