@@ -94,22 +94,39 @@ Resuelva todas las consultas utilizando las cláusulas LEFT JOIN, RIGHT JOIN, NA
 1. Devuelve un listado que muestre solamente los clientes que no han realizado ningún pago. 
 
 ```sql
-
+SELECT c.nombre_cliente
+FROM cliente c
+LEFT JOIN pago p ON c.codigo_cliente = p.codigo_cliente
+WHERE p.codigo_cliente IS NULL;
 ```
 
 2. Devuelve un listado que muestre solamente los clientes que no han realizado ningún pedido.
 
 ```sql
+SELECT c.nombre_cliente
+FROM cliente c
+LEFT JOIN pedido p ON c.codigo_cliente = p.codigo_cliente
+WHERE p.codigo_cliente IS NULL;
 ```
 
 3. Devuelve un listado que muestre los clientes que no han realizado ningún pago y los que no han realizado ningún pedido.
-
 ```sql
+SELECT c.nombre_cliente
+FROM cliente c
+LEFT JOIN pedido pe ON c.codigo_cliente = pe.codigo_cliente
+LEFT JOIn pago pa ON c.codigo_cliente = pa.codigo_cliente
+WHERE pa.codigo_cliente IS NULL
+AND pe.codigo_cliente IS NULL;
+
 ```
 
 4. Devuelve un listado que muestre solamente los empleados que no tienen una oficina asociada.
 
 ```sql
+SELECT e.nombre AS Empleado
+FROM empleado e
+LEFT JOIN oficina o ON e.codigo_oficina = o.codigo_oficina
+WHERE e.codigo_oficina IS NULL;
 ```
 
 5. Devuelve un listado que muestre solamente los empleados que no tienen un cliente asociado.
