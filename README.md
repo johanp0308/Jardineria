@@ -89,7 +89,7 @@ JOIN gama_producto g ON pr.gama = g.gama
 GROUP BY c.nombre_cliente;
 ```
 
-1.4.6 Consultas multitabla (Composición externa)
+## 1.4.6 Consultas multitabla (Composición externa)
 Resuelva todas las consultas utilizando las cláusulas LEFT JOIN, RIGHT JOIN, NATURAL LEFT JOIN y NATURAL RIGHT D0IN 
 
 1. Devuelve un listado que muestre solamente los clientes que no han realizado ningún pago. 
@@ -213,3 +213,58 @@ JOIN empleado j ON e.codigo_jefe = j.codigo_empleado
 WHERE c.codigo_empleado_rep_ventas IS NULL;
 ```
 
+### 1.4.8 Subconsultas
+
+#### 1.4.8.1 Con operadores básicos de comparación
+
+1. Devuelve el nombre del cliente con mayor límite de crédito.
+
+```sql
+SELECT c.nombre_cliente as Cliente
+FROM cliente c
+WHERE c.limite_credito = (SELECT MAX(c.limite_credito) FROM cliente c);
+```
+
+2. Devuelve el nombre del producto que tenga el precio de venta más caro.
+
+```sql
+SELECT p.nombre as Producto, p.precio_venta
+FROM producto p
+WHERE p.precio_venta = (
+    SELECT MAX(precio_venta) FROM producto
+);
+```
+
+3. Devuelve el nombre del producto del que se han vendido más unidades. (Tenga en cuenta que tendrá que calcular cuál es el número total de unidades que se han vendido de cada producto a partir de los datos de la tabla `detalle_pedido`).
+
+```sql
+
+```
+
+4. Los clientes cuyo límite de crédito sea mayor que los pagos que haya realizado. (Sin utilizar `INNER JOIN`).
+5. Devuelve el producto que más unidades tiene en stock.
+6. Devuelve el producto que menos unidades tiene en stock.
+7. Devuelve el nombre, los apellidos y el email de los empleados que están a cargo de **Alberto Soria**.
+
+#### 1.4.8.2 Subconsultas con ALL y ANY
+
+1. Devuelve el nombre del cliente con mayor límite de crédito.
+2. Devuelve el nombre del producto que tenga el precio de venta más caro.
+3. Devuelve el producto que menos unidades tiene en stock.
+
+#### 1.4.8.3 Subconsultas con IN y NOT IN
+
+1. Devuelve el nombre, apellido1 y cargo de los empleados que no representen a ningún cliente.
+2. Devuelve un listado que muestre solamente los clientes que no han realizado ningún pago.
+3. Devuelve un listado que muestre solamente los clientes que sí han realizado algún pago.
+4. Devuelve un listado de los productos que nunca han aparecido en un pedido.
+5. Devuelve el nombre, apellidos, puesto y teléfono de la oficina de aquellos empleados que no sean representante de ventas de ningún cliente.
+6. Devuelve las oficinas donde **no trabajan** ninguno de los empleados que hayan sido los representantes de ventas de algún cliente que haya realizado la compra de algún producto de la gama `Frutales`.
+7. Devuelve un listado con los clientes que han realizado algún pedido pero no han realizado ningún pago.
+
+#### 1.4.8.4 Subconsultas con EXISTS y NOT EXISTS
+
+1. Devuelve un listado que muestre solamente los clientes que no han realizado ningún pago.
+2. Devuelve un listado que muestre solamente los clientes que sí han realizado algún pago.
+3. Devuelve un listado de los productos que nunca han aparecido en un pedido.
+4. Devuelve un listado de los productos que han aparecido en un pedido alguna vez.
