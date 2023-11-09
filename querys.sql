@@ -167,3 +167,25 @@ JOIN empleado j ON e.codigo_jefe = j.codigo_empleado
 WHERE c.codigo_empleado_rep_ventas IS NULL;
 
 -- 1.4.7
+
+
+
+-- 1.4.8.1
+
+-- 1. Devuelve el nombre del cliente con mayor límite de crédito
+SELECT c.nombre_cliente as Cliente
+FROM cliente c
+WHERE c.limite_credito = (SELECT MAX(c.limite_credito) FROM cliente c);
+
+-- 2. Devuelve el nombre del producto que tenga el precio de venta más caro.
+SELECT p.nombre as Producto, p.precio_venta
+FROM producto p
+WHERE p.precio_venta = (
+    SELECT MAX(precio_venta) FROM producto
+);
+
+-- 3. Devuelve el nombre del producto del que se han vendido más unidades. (Tenga en cuenta que tendrá que calcular cuál es el número total de unidades que se han vendido de cada producto a partir de los datos de la tabla `detalle_pedido`)
+
+SELECT p.nombre as Producto
+FROM producto p
+JOIN detalle_pedido d ON p.codigo_producto = d.codigo_producto
