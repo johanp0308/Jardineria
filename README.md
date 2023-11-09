@@ -196,10 +196,20 @@ WHERE pr.gama = 'Frutales';
 11. Devuelve un listado con los clientes que han realizado algún pedido pero no han realizado ningún pago.
 
 ```sql
-
+SELECT DISTINCT c.nombre_cliente as Cliente
+FROM cliente c
+JOIN pedido p ON p.codigo_cliente = c.codigo_cliente
+LEFT JOIN pago pa ON c.codigo_cliente = pa.codigo_cliente
+WHERE pa.codigo_cliente IS NULL;
 ```
 
 12. Devuelve un listado con los datos de los empleados que no tienen clientes asociados y el nombre de su jefe asociado.
 
 ```sql
+SELECT e.nombre as Nombre, e.apellido1 as Apellido, e.email as Correo, j.nombre
+FROM empleado e
+LEFT JOIN cliente c ON c.codigo_empleado_rep_ventas = e.codigo_empleado
+JOIN empleado j ON e.codigo_jefe = j.codigo_empleado
+WHERE c.codigo_empleado_rep_ventas IS NULL;
 ```
+
