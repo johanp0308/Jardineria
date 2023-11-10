@@ -295,8 +295,23 @@ WHERE e.codigo_jefe IN (
 #### 1.4.8.2 Subconsultas con ALL y ANY
 
 1. Devuelve el nombre del cliente con mayor límite de crédito.
+```sql
+SELECT c.nombre_cliente
+FROM cliente c
+WHERE c.limite_credito >= ALL(SELECT c.limite_credito FROM cliente c);
+```
 2. Devuelve el nombre del producto que tenga el precio de venta más caro.
+```sql
+SELECT pr.nombre as Producto
+FROM producto pr
+WHERE pr.precio_venta >= ALL(
+    SELECT pr.precio_venta FROM producto pr
+);
+```
 3. Devuelve el producto que menos unidades tiene en stock.
+```sql
+
+```
 
 #### 1.4.8.3 Subconsultas con IN y NOT IN
 
