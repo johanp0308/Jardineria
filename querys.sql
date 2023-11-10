@@ -186,6 +186,51 @@ WHERE p.precio_venta = (
 
 -- 3. Devuelve el nombre del producto del que se han vendido más unidades. (Tenga en cuenta que tendrá que calcular cuál es el número total de unidades que se han vendido de cada producto a partir de los datos de la tabla `detalle_pedido`)
 
-SELECT p.nombre as Producto
+SELECT p.nombre as Codigo, SUM(d.cantidad) as Cantidad
 FROM producto p
 JOIN detalle_pedido d ON p.codigo_producto = d.codigo_producto
+GROUP BY p.nombre
+ORDER BY Cantidad DESC
+LIMIT 1;
+
+-- 4 Los clientes cuyo límite de crédito sea mayor que los pagos que haya realizado. (Sin utilizar `INNER JOIN`).
+
+SELECT c.nombre_cliente as Cliente
+FROM cliente c
+WHERE c.limite_credito > (
+    SELECT MAX(pa.total)
+    FROM pago pa
+    WHERE c.codigo_cliente = pa.codigo_cliente
+    GROUP BY c.codigo_cliente
+);
+
+-- 5. Devuelve el producto que más unidades tiene en stock.
+
+SELECT DISTINCT pr.nombre as Producto, pr.cantidad_en_stock as Cantidad
+FROM producto pr
+WHERE pr.cantidad_en_stock = (
+    SELECT cantidad_en_stock
+    FROM producto
+    ORDER BY cantidad_en_stock DESC
+    LIMIT 1
+);
+
+-- 6. Devuelve el producto que menos unidades tiene en stock.
+SELECT DISTINCT pr.nombre as Producto, pr.cantidad_en_stock as Cantidad
+FROM producto pr
+WHERE pr.cantidad_en_stock = (
+    SELECT cantidad_en_stock
+    FROM producto
+    ORDER BY cantidad_en_stock ASC
+    LIMIT 1
+);
+
+-- 7. Devuelve el nombre, los apellidos y el email de los empleados que están a cargo de Alberto Soria.
+SELECT e.nombre as Nombre, e.apellido1 as Apellido_1, e.apellido2 as Apellido_2, e.email as Correo
+FROM empleado e
+WHERE e.codigo_jefe IN (
+    SELECT e.codigo_jefe 
+    FROM empleado e
+    WHERE e.nombre LIKE 'alberto%'
+    AND e.apellido1 LIKE 'soria%'
+);
