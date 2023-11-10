@@ -195,7 +195,7 @@ LIMIT 1;
 
 -- 4 Los clientes cuyo límite de crédito sea mayor que los pagos que haya realizado. (Sin utilizar `INNER JOIN`).
 
-SELECT c.nombre_cliente as Cliente
+SELECT c.nombre_cliente as Cliente, c.limite_credito
 FROM cliente c
 WHERE c.limite_credito > (
     SELECT MAX(pa.total)
@@ -234,3 +234,22 @@ WHERE e.codigo_jefe IN (
     WHERE e.nombre LIKE 'alberto%'
     AND e.apellido1 LIKE 'soria%'
 );
+
+-- 1.4.8.2 Subconsultas con ALL y ANY
+
+-- 1. Devuelve el nombre del cliente con mayor límite de crédito.
+SELECT c.nombre_cliente
+FROM cliente c
+WHERE c.limite_credito >= ALL(SELECT c.limite_credito FROM cliente c);
+
+-- 2. Devuelve el nombre del producto que tenga el precio de venta más caro.
+SELECT pr.nombre as Producto
+FROM producto pr
+WHERE pr.precio_venta >= ALL(
+    SELECT pr.precio_venta FROM producto pr
+)
+
+-- 3. Devuelve el producto que menos unidades tiene en stock.
+SELECT pr.nombre
+FROM producto pr
+WHERE pr.cantidad_en_stock <= ALL(SELECT pr.cantidad_en_stock FROM producto pr)
