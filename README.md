@@ -310,7 +310,9 @@ WHERE pr.precio_venta >= ALL(
 ```
 3. Devuelve el producto que menos unidades tiene en stock.
 ```sql
-
+SELECT pr.nombre
+FROM producto pr
+WHERE pr.cantidad_en_stock <= ALL(SELECT pr.cantidad_en_stock FROM producto pr)
 ```
 
 #### 1.4.8.3 Subconsultas con IN y NOT IN
