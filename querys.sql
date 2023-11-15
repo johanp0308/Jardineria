@@ -253,3 +253,69 @@ WHERE pr.precio_venta >= ALL(
 SELECT pr.nombre
 FROM producto pr
 WHERE pr.cantidad_en_stock <= ALL(SELECT pr.cantidad_en_stock FROM producto pr)
+
+-- 1.4.8.3 Subconsultas con IN y NOT IN
+
+-- 1. Devuelve el nombre, apellido1 y cargo de los empleados que no representen a ningún cliente.
+
+SELECT e.nombre as nombre, e.apellido1 as apellido1, e.puesto as cargo
+FROM empleado e
+WHERE e.codigo_empleado NOT IN (SELECT c.codigo_empleado_rep_ventas FROM cliente c);
+
+-- 2. Devuelve un listado que muestre solamente los clientes que no han realizado ningún pago.
+
+SELECT c.* 
+FROM cliente c 
+WHERE c.codigo_cliente NOT IN (
+    SELECT p.codigo_cliente FROM pago p
+);
+
+-- 3. Devuelve un listado que muestre solamente los clientes que sí han realizado algún pago.
+
+SELECT c.* 
+FROM cliente c 
+WHERE c.codigo_cliente IN (
+    SELECT p.codigo_cliente FROM pago p
+);
+
+-- 4. Devuelve un listado de los productos que nunca han aparecido en un pedido.
+
+SELECT pr.* 
+FROM producto pr
+WHERE pr.codigo_producto NOT IN (
+    SELECT d.codigo_producto
+    FROM detalle_pedido d
+);
+
+-- 5. Devuelve el nombre, apellidos, puesto y teléfono de la oficina de aquellos empleados que no sean representante de ventas de ningún cliente.
+
+SELECT e.nombre as nombre, e.apellido1 as apellido1, e.apellido2 as apellido2, e.puesto as puesto, o.telefono as telefono
+FROM empleado e
+JOIN oficina o ON e.codigo_oficina = o.codigo_oficina
+WHERE e.codigo_empleado NOT IN (SELECT c.codigo_empleado_rep_ventas FROM cliente c);
+
+-- 6. Devuelve las oficinas donde **no trabajan** ninguno de los empleados que hayan sido los representantes de ventas de algún cliente que haya realizado la compra de algún producto de la gama `Frutales`.
+
+SELECT o.*
+FROM oficina o
+WHERE o.codigo_oficina NOT IN (
+    SELECT DISTINCT e.codigo_oficina
+    FROM empleado e
+    JOIN cliente c ON e.codigo_empleado = c.codigo_empleado_rep_ventas
+    JOIN pedido p ON c.codigo_cliente = p.codigo_cliente
+    JOIN detalle_pedido d ON d.codigo_pedido = p.codigo_pedido
+    JOIN producto pr ON d.codigo_producto = pr.codigo_producto
+    JOIN gama_producto g ON g.gama = pr.gama
+    WHERE g.gama = 'Frutales'
+);
+
+-- 7. Devuelve un listado con los clientes que han realizado algún pedido pero no han realizado ningún pago.
+
+SELECT c.*
+FROM cliente c
+WHERE c.codigo_cliente IN (
+    SELECT p.codigo_cliente FROM pedido p
+)
+AND c.codigo_cliente NOT IN (
+    SELECT p.codigo_cliente FROM pago p
+);
