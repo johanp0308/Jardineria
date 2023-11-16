@@ -417,3 +417,76 @@ AND c.codigo_cliente NOT IN (
 
 ```sql
 ```
+
+### Tips de SQL
+
+#### 5 Tips de SELECT
+
+1. Operaciones en las columnas de las tablas
+```sql
+SELECT codigo_cliente as Cliente, forma_pago as Forma_de_Pago, total as Subtotal, 0.19 as Iva, (total*1.19) as Total 
+FROM pago;
+```
+
+2. Usando el `CASE`
+```sql
+SELECT nombre_cliente, CASE WHEN limite_credito < 50000 THEN 'Pobre' WHEN limite_credito>50000 THEN limite_credito END as estatus FROM cliente;
+```
+
+3. SELECT EN EL SELECT
+```sql
+SELECT DISTINCT p.codigo_pedido as Pedido_id, (  SELECT c.nombre_cliente FROM cliente c WHERE p.codigo_cliente = c.codigo_cliente) as cliente FROM pedido p;
+```
+
+4. Consultas como tablas para consultar
+```sql
+SELECT cliente, GROUP_CONCAT(Pedido_id) as Pedido_ids FROM  (SELECT DISTINCT p.codigo_pedido as Pedido_id, (  SELECT c.nombre_cliente FROM cliente c WHERE p.codigo_cliente = c.codigo_cliente) as cliente FROM pedido p) as tabla GROUP BY (cliente);
+```
+5. Id virtual
+```sql
+SELECT ROW_NUMBER() OVER (ORDER BY (SELECT nombre_cliente)) as N°, nombre_cliente FROM cliente ORDER BY nombre_cliente;
+```
+
+#### 5 Tips de UPDATE
+1. UPDATE a varios
+```sql
+UPDATE clientes
+SET pais = pais + 'no';
+```
+
+2. UPDATE con valores por defecto
+```sql
+UPDATE clientes
+SET pais = DEFAULT
+```
+
+3. UPDATE con subconsulta
+
+```sql
+UPDATE empleado
+SET pueto = (
+    SELECT puesto FROM empleado WHERE codigo_empleado = 1
+)
+WHERE codigo_empleado = 2
+```
+
+4. UPDATE con JOIN's 
+```sql
+UPDATE producto
+SET gama = 'No gama'
+FROM producto
+RIGHT JOIN producto.gama = gama.gama;
+```
+
+5. UPDATE JSON
+
+```sql
+CREATE VIEW vista_json_data 
+AS SELECT
+    CAST(imagen AS JSON) as imagen_json
+FROM gama_producto;
+
+
+
+
+```
