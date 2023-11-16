@@ -319,3 +319,28 @@ WHERE c.codigo_cliente IN (
 AND c.codigo_cliente NOT IN (
     SELECT p.codigo_cliente FROM pago p
 );
+
+
+-- Consultas EXISTS
+
+--
+
+
+-- Tips SQL
+
+-- 5 Tips SQL SELECT
+
+-- Operacion en las columnas
+SELECT codigo_cliente as Cliente, forma_pago as Forma_de_Pago, total as Subtotal, 0.19 as Iva, (total*1.19) as Total 
+FROM pago;
+
+-- CASE
+SELECT nombre_cliente, CASE WHEN limite_credito < 50000 THEN 'Pobre' WHEN limite_credito>50000 THEN limite_credito END as estatus FROM cliente;
+
+-- Sub consulta en la columna
+SELECT DISTINCT p.codigo_pedido as Pedido_id, (  SELECT c.nombre_cliente FROM cliente c WHERE p.codigo_cliente = c.codigo_cliente) as cliente FROM pedido p;
+-- Consultas como tablas para consultar
+SELECT cliente, GROUP_CONCAT(Pedido_id) as Pedido_ids FROM  (SELECT DISTINCT p.codigo_pedido as Pedido_id, (  SELECT c.nombre_cliente FROM cliente c WHERE p.codigo_cliente = c.codigo_cliente) as cliente FROM pedido p) as tabla GROUP BY (cliente);
+
+-- Id virtual
+SELECT ROW_NUMBER() OVER (ORDER BY (SELECT nombre_cliente)) as N°, nombre_cliente FROM cliente ORDER BY nombre_cliente;
