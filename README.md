@@ -485,8 +485,30 @@ CREATE VIEW vista_json_data
 AS SELECT
     CAST(imagen AS JSON) as imagen_json
 FROM gama_producto;
-
-
-
-
 ```
+
+#### 5 Tips de WHERE
+
+1. Usando IN
+```sql
+SELECT *
+FROM cliente
+WHERE region IN ('Madrid');
+```
+
+2. Usando subConsulta en el WHERe
+```sql
+SELECT *
+FROM producto
+WHERE (
+    SELECT SUM(precio_venta) FROM producto
+) > 5000;
+```
+
+3. Expresiones Regulares
+```sql
+SELECT *
+FROM cliente
+WHERE nombre_cliente LIKE '%s%';
+```
+4. 
