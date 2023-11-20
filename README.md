@@ -401,6 +401,9 @@ AND c.codigo_cliente NOT IN (
 1. Devuelve un listado que muestre solamente los clientes que no han realizado ningún pago.
 
 ```sql
+SELECT c.*
+FROM clientes c
+WHERE c.codigo_cliente NOT EXISTS IN(SELECT p.codigo_cliente FROM pago p)
 ```
 
 2. Devuelve un listado que muestre solamente los clientes que sí han realizado algún pago.
