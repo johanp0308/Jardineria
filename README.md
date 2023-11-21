@@ -402,18 +402,36 @@ AND c.codigo_cliente NOT IN (
 
 ```sql
 SELECT c.*
-FROM clientes c
-WHERE c.codigo_cliente NOT EXISTS IN(SELECT p.codigo_cliente FROM pago p)
+FROM cliente c
+WHERE NOT EXISTS(
+    SELECT 1 
+    FROM cliente c 
+    LEFT JOIN pago p ON c.codigo_cliente = p.codigo_cliente
+);
 ```
 
 2. Devuelve un listado que muestre solamente los clientes que sí han realizado algún pago.
 
 ```sql
+SELECT c.*
+FROM cliente c
+WHERE EXISTS(
+    SELECT 1
+    FROM cliente c
+    JOIN pago p ON c.codigo_cliente = p.codigo_cliente
+);
 ```
 
 3. Devuelve un listado de los productos que nunca han aparecido en un pedido.
 
 ```sql
+SELECT pr.*
+FROM producto pr
+WHERE NOT EXISTS(
+    SELECT 1
+    FROM producto p
+    LEFT JOIN detalle_pedido d ON p.codigo_producto = d.codigo_producto
+);
 ```
 
 4. Devuelve un listado de los productos que han aparecido en un pedido alguna vez.
