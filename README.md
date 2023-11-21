@@ -437,6 +437,13 @@ WHERE NOT EXISTS(
 4. Devuelve un listado de los productos que han aparecido en un pedido alguna vez.
 
 ```sql
+SELECT DISTINCT pr.*
+FROM producto pr
+WHERE EXISTS(
+    SELECT 1
+    FROM producto p
+    JOIN detalle_pedido d ON p.codigo_producto = d.codigo_producto
+);
 ```
 
 ### Tips de SQL
