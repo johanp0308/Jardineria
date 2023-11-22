@@ -213,6 +213,80 @@ JOIN empleado j ON e.codigo_jefe = j.codigo_empleado
 WHERE c.codigo_empleado_rep_ventas IS NULL;
 ```
 
+### 1.4.7 Consultas una tabla
+
+1. Devuelve un listado con el codigo y la oficina y la ciudad donde hay oficinas.
+```sql
+SELECT o.codigo_oficina, o.ciudad
+FROM oficina o;
+```
+2. Devuelve un listado con la ciudad y el telefono de las oficinas de `España`
+```sql
+SELECT o.ciudad, o.telefono
+FROM oficina o
+WHERE o.pais LIKE 'España';
+```
+
+3. Devuelve un listado con el nombre, apellidos y email de los empleados cuyo jefe tiene un codigo de jefe igual a 7.
+```sql
+SELECT e.nombre, e.apellido1, e.apellido2, e.email
+FROM empleado e
+WHERE e.codigo_jefe = 7;
+```
+
+4. Devuelve el nombre del puesto, nombre, apellidos y email del jefe de la empresa;
+```sql
+SELECT e.puesto, e.nombre, e.apellido1, e.apellido2, e.email
+FROM empleado e
+WHERE e.codigo_jefe IS NULL;
+```
+
+
+5. Devuelve un listado con el nombre, apellidos y puesto de aquellos empleados que no sean representante de ventas.
+```sql
+SELECT e.nombre, e.apellido1, e.apellido2, e.puesto
+FROM empleado e
+WHERE e.puesto NOT LIKE '%Representante Ventas%';
+```
+
+6. Devuelve un listado con el nombre de los todos clientes españoles.
+```sql
+SELECT c.nombre_cliente
+FROM cliente c
+WHERE c.pais LIKE 'Spain';
+```
+7. Devuelve un listado con los distintos estados por los que puede pasar un pedido.
+```sql
+SELECT DISTINCT p.estado
+FROM pedido p;
+```
+8. Devuelve un listado con el codigo de cliente de aquellos clientes que realizaron algún pago en 2008. Tenga en cuenta que debera eliminar aquellos codigos de cliente que aparezcan repetidos. Resuelva la consulta.
+```sql
+SELECT DISTINCT c.codigo_cliente
+FROM cliente c, pago p
+WHERE c.codigo_cliente = p.codigo_cliente
+AND DATE_FORMAT(p.fecha_pago,"%Y") = 2008;
+```
+9. Devuelve un listado con el codigo de pedido, codigo de cliente, fecha esperada y fecha de entrega de los pedidos que no han sido entregados a tiempo.
+```sql
+SELECT p.codigo_pedido, c.codigo_cliente, p.fecha_esperada, p.fecha_entrega
+FROM pedido p
+JOIN cliente c ON p.codigo_cliente = c.codigo_cliente
+WHERE p.fecha_entrega > p.fecha_esperada OR p.estado LIKE 'Rechazado';
+```
+10. Devuelve un listado con el codigo de pedido, codigo de cliente, fecha esperada y fecha entrega de los pedidos cuya fecha de entrega ha sido al menos dos dias antes de la fecha esperada.
+```sql
+SELECT p.codigo_pedido, c.codigo_cliente, p.fecha_esperada,  p.fecha_entrega
+FROM pedido p
+JOIN cliente c ON p.codigo_cliente = c.codigo_cliente
+WHERE datediff(p.fecha_esperada,p.fecha_entrega)=2; 
+```
+
+11.
+```sql
+
+```
+
 ### 1.4.8 Subconsultas
 
 #### 1.4.8.1 Con operadores básicos de comparación
