@@ -479,7 +479,8 @@ WHERE pr.codigo_producto NOT IN (
 SELECT e.nombre as nombre, e.apellido1 as apellido1, e.apellido2 as apellido2, e.puesto as puesto, o.telefono as telefono
 FROM empleado e
 JOIN oficina o ON e.codigo_oficina = o.codigo_oficina
-WHERE e.codigo_empleado NOT IN (SELECT c.codigo_empleado_rep_ventas FROM cliente
+WHERE e.codigo_empleado NOT IN (SELECT c.codigo_empleado_rep_ventas FROM cliente c
+);
 ```
 
 6. Devuelve las oficinas donde **no trabajan** ninguno de los empleados que hayan sido los representantes de ventas de algún cliente que haya realizado la compra de algún producto de la gama `Frutales`.
@@ -588,7 +589,7 @@ SELECT cliente, GROUP_CONCAT(Pedido_id) as Pedido_ids FROM  (SELECT DISTINCT p.c
 ```
 5. Id virtual
 ```sql
-SELECT ROW_NUMBER() OVER (ORDER BY (SELECT nombre_cliente)) as N°, nombre_cliente FROM cliente ORDER BY nombre_cliente;
+SELECT ROW_NUMBER() OVER (ORDER BY (SELECT nombre_cliente)) as N°, nombre_cliente FROM cliente ORDER BY nombre_cliente);
 ```
 
 #### 5 Tips de UPDATE
@@ -629,6 +630,12 @@ CREATE VIEW vista_json_data
 AS SELECT
     CAST(imagen AS JSON) as imagen_json
 FROM gama_producto;
+
+-- en caso de que hubiera un JSON
+
+UPDATE vista_json_data
+SET imagen = JSON_MODIFY(Data,'$.gamaurl',JSON_QUERY('["http://sad.jpg","http://nose.jpg"]'))
+WHERE gama = 'Frutales';
 ```
 
 #### 5 Tips de WHERE
@@ -655,4 +662,17 @@ SELECT *
 FROM cliente
 WHERE nombre_cliente LIKE '%s%';
 ```
-4. 
+4. cortando `Strings`
+```sql
+SELECT c* 
+FROM cliente c
+WHERE SUBSTRING(c.nombre_cliente,1,1) = A;
+```
+
+#### 5 Tips de Where
+1. Usando Having
+```sql
+SELECT p.codigo_cliente, p.forma_pago, COUNT(*) contador
+FROM pago p
+GROUP BY p.codigo_cliente; 
+```
