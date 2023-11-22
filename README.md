@@ -282,10 +282,52 @@ JOIN cliente c ON p.codigo_cliente = c.codigo_cliente
 WHERE datediff(p.fecha_esperada,p.fecha_entrega)=2; 
 ```
 
-11.
+11. Devuelve un listado de todos los pedidos que fueron rechazados en `2009`.
 ```sql
-
+SELECT p.*
+FROM pedido p
+WHERE p.estado LIKE 'Rechazado'
+AND DATE_FORMAT(p.fecha_pedido,'%Y') = 2009;
 ```
+
+12. Devueleve un listado de todos los pedidos que han sido entregados en el mes de enero de cualquier año.
+```sql
+SELECT p.*
+FROM pedido p
+WHERE DATE_FORMAT(p.fecha_entrega,'%m') = 01;
+```
+
+13. Devuelve un listado con todos los pagos que se utilizan en el año 2008 mediante paypal. Ordene el resultado de mayor a menor.
+```sql
+SELECT pa.*
+FROM pago pa
+WHERE DATE_FORMAT(pa.fecha_pago,'%Y') = 2008
+AND forma_pago LIKE 'Paypal';
+```
+
+14. Devuelve un listado con todas las formas de pago que aparecen en la tabla pago. Tenga en cuenta que no deben aparecer formas de pago repetidas.
+```sql
+SELECT DISTINCT pa.forma_pago
+FROM pago pa;
+```
+
+15. Devuelve un listado con todos los productos que pertenecen a la gama `Ornamentales` y que tienen mas de `100` en stock. El listado deberá estar ordenado por su precio de venta, mostrando en primer lugar los de mayor precio.
+```sql
+SELECT pr.*
+FROM producto pr
+WHERE pr.gama LIKE 'Ornamentales'
+AND pr.cantidad_en_stock >100
+ORDER BY pr.cantidad_en_stock DESC;
+```
+
+16. Devuelve un listado con todos los clientes que sean de la ciudad de `Madrid` y cuyo representante de ventas tenga el codigo de empleado `10` o `30`.
+```sql
+SELECT c.*
+FROM cliente c
+WHERE c.ciudad LIKE 'Madrid'
+AND c.codigo_empleado_rep_ventas = 10 OR c.codigo_empleado_rep_ventas = 30;
+```
+
 
 ### 1.4.8 Subconsultas
 
