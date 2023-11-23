@@ -672,7 +672,38 @@ WHERE SUBSTRING(c.nombre_cliente,1,1) = A;
 #### 5 Tips de Where
 1. Usando Having
 ```sql
-SELECT p.codigo_cliente, p.forma_pago, COUNT(*) contador
+SELECT GROUP_CONCAT(p.codigo_cliente), p.forma_pago, COUNT(*) as contador
 FROM pago p
-GROUP BY p.codigo_cliente; 
+GROUP BY p.forma_pago
+HAVING COUNT(*) =1; 
+```
+2. Agrupando con una funcion escalar
+```sql
+SELECT GROUP_CONCAT(p.codigo_cliente), p.forma_pago, COUNT(*) as contador
+FROM pago p
+GROUP BY p.forma_pago
+HAVING p.forma_pago LIKE '%r%'
+```
+3. Usando UNION ALL.
+```sql
+SELECT nombre_cliente as clientesAll FROM cliente
+UNION ALL
+SELECT nombre_contacto as clientesAll FROM cliente;  
+```
+4. Group Concat
+```sql
+SELECT c.nombre_cliente, GROUP_CONCAT(p.codigo_pedido)
+FROM cliente c
+JOIN pedido p ON c.codigo_cliente = p.codigo_cliente
+WHERE p.fecha_esperada = p.fecha_entrega
+GROUP BY c.nombre_cliente;
+```
+
+5. ROLLUP
+```sql
+SELECT IF(c.nombre_cliente IS NULL, 'Total',c.nombre_cliente), COUNT(*) as Total
+FROM cliente c
+JOIN pedido p ON c.codigo_cliente = p.codigo_cliente
+WHERE p.fecha_esperada = p.fecha_entrega
+GROUP BY c.nombre_cliente WITH ROLLUP;
 ```
