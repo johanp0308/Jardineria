@@ -669,7 +669,7 @@ FROM cliente c
 WHERE SUBSTRING(c.nombre_cliente,1,1) = A;
 ```
 
-#### 5 Tips de Where
+#### 5 Tips de Group BY
 1. Usando Having
 ```sql
 SELECT GROUP_CONCAT(p.codigo_cliente), p.forma_pago, COUNT(*) as contador
